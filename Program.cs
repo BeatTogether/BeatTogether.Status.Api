@@ -1,5 +1,5 @@
 using BeatTogether.Extensions;
-using BeatTogether.MasterServer.Api.Configuration;
+using BeatTogether.Status.Api.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;

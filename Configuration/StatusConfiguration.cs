@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using BeatTogether.MasterServer.Api.Models;
+using BeatTogether.Status.Api.Models;
 
-namespace BeatTogether.MasterServer.Api.Configuration
+namespace BeatTogether.Status.Api.Configuration
 {
     public class StatusConfiguration
     {

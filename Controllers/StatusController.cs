@@ -1,11 +1,11 @@
 ﻿using System;
-using BeatTogether.MasterServer.Api.Configuration;
-using BeatTogether.MasterServer.Api.Enums;
-using BeatTogether.MasterServer.Api.Models;
+using BeatTogether.Status.Api.Configuration;
+using BeatTogether.Status.Api.Enums;
+using BeatTogether.Status.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace BeatTogether.MasterServer.Api.Controllers
+namespace BeatTogether.Status.Api.Controllers
 {
     [ApiController]
     [Route("status")]

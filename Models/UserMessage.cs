@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BeatTogether.MasterServer.Api.Models
+namespace BeatTogether.Status.Api.Models
 {
     public record UserMessage(List<LocalizedMessage> localizedMessages);
 }

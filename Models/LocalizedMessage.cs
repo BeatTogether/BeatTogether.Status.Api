@@ -1,6 +1,6 @@
-﻿using BeatTogether.MasterServer.Api.Enums;
+﻿using BeatTogether.Status.Api.Enums;
 
-namespace BeatTogether.MasterServer.Api.Models
+namespace BeatTogether.Status.Api.Models
 {
     public record LocalizedMessage(Language language, string message);
 }
