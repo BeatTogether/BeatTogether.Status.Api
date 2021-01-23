@@ -16,7 +16,6 @@ namespace BeatTogether.Status.Api
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(true)
-                .UseSerilog()
                 .ConfigureWebHostDefaults(webHostBuilder =>
                     webHostBuilder
                         .ConfigureServices((hostBuilderContext, services) =>
@@ -30,6 +29,7 @@ namespace BeatTogether.Status.Api
                                 .UseRouting()
                                 .UseEndpoints(endPointRouteBuilder => endPointRouteBuilder.MapControllers())
                         )
-                );
+                )
+                .UseSerilog();
     }
 }
