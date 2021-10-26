@@ -22,6 +22,7 @@ namespace BeatTogether.Status.Api
                             services
                                 .AddOptions()
                                 .Configure<StatusConfiguration>(hostBuilderContext.Configuration.GetSection("Status"))
+                                .Configure<QuickplayConfiguration>(hostBuilderContext.Configuration.GetSection("Quickplay"))
                                 .AddControllers()
                         )
                         .Configure(applicationBuilder =>
