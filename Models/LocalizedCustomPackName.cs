@@ -2,5 +2,9 @@
 
 namespace BeatTogether.Status.Api.Models
 {
-    public record LocalizedCustomPackName(Language language, string packName);
+    public class LocalizedCustomPackName
+    {
+        public Language language { get; set; }
+        public string packName { get; set; } = "";
+    }
 }

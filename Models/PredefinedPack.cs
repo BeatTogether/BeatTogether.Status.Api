@@ -1,4 +1,8 @@
 ﻿namespace BeatTogether.Status.Api.Models
 {
-    public record PredefinedPack(int order, string packId);
+    public class PredefinedPack
+    {
+        public int order { get; set; }
+        public string packId { get; set; } = "";
+    }
 }

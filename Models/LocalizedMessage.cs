@@ -2,5 +2,8 @@
 
 namespace BeatTogether.Status.Api.Models
 {
-    public record LocalizedMessage(Language language, string message);
+    public class LocalizedMessage {
+        public Language language { get; set; }
+        public string message { get; set; } = "";
+    };
 }
