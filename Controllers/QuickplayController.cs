@@ -19,10 +19,10 @@ namespace BeatTogether.Status.Api.Controllers
         [HttpGet]
         public MasterServerQuickplayData Get()
         {
-            return new MasterServerQuickplayData(
+            return new MasterServerQuickplayData(new QuickplaySongPacksOverride(
                 _configuration.PredefinedPacks,
                 _configuration.LocalizedCustomPacks
-            );
+            ));
         }
     }
 }
