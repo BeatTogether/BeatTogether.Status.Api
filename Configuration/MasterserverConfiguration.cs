@@ -4,6 +4,6 @@ namespace BeatTogether.Api.Configuration
 {
     public class MasterserverConfiguration
     {
-        public string Endpoint { get; set; } = "232.245.4.22:38493";
+        public string Endpoint { get; set; } = "BeatTogether.SomeIPAddress";
     }
 }

@@ -18,6 +18,7 @@ using Microsoft.Extensions.Options;
 
 namespace BeatTogether.Api.Controllers
 {
+    //TODO cache values that are fetched often and only get the values from the master/dedi servers if the chached values are over 2 seconds old or something, will reduce traffic to the servers
     [ApiController]
     [Route("[controller]")]
     public class MasterserverController : ControllerBase
@@ -25,6 +26,12 @@ namespace BeatTogether.Api.Controllers
         private readonly MasterserverConfiguration _configuration;
         private readonly IMatchmakingService _matchmakingService;
         private readonly IApiInterface _apiInterface;
+
+
+        private const string FullAccess = "FULLACCESS";
+        private const string CreateAndDestryPermanantServers = "MIDACCESS";
+        //private const string CreateBasicServers = "BASICACCESS";
+
 
         public MasterserverController(IOptionsSnapshot<MasterserverConfiguration> configuration, IMatchmakingService matchmakingService, IApiInterface apiInstance)
         {
@@ -34,14 +41,14 @@ namespace BeatTogether.Api.Controllers
         }
 
         [HttpGet(Name = "GetMasterserverController")]
-        public MasterServerData Get()
+        public async Task<MasterServerData> Get()
         {
-            int CurrentInstanceCount = 0;
-            int CurrentPublicInstanceCount = 0;
+            var PublicCount = await _apiInterface.GetPublicServerCount(new GetPublicServerCountRequest());
+            var AllCount = await _apiInterface.GetServerCount(new GetServerCountRequest());
             return new MasterServerData(
                 _configuration.Endpoint,
-                CurrentPublicInstanceCount,
-                CurrentInstanceCount
+                PublicCount.Servers,
+                AllCount.Severs
             );
         }
         [HttpGet("test")]
@@ -77,10 +84,11 @@ namespace BeatTogether.Api.Controllers
             return AdvancedServer.Convert(Response._AdvancedInstance!, secret);
         }
 
-
-        [HttpGet("GetList/Secret/all")]
-        public async Task<string[]> GetAllSecretList()
+        [HttpGet("GetList/Secret/all/{AccessToken}")]
+        public async Task<ActionResult<string[]>> GetAllSecretList(string AccessToken)
         {
+            if(AccessToken != FullAccess)
+                return Unauthorized();
             ServerSecretListResponse Response = await _apiInterface.GetServerSecretsList(new GetServerSecretsListRequest());
             return Response.Secrets;
         }
@@ -92,9 +100,11 @@ namespace BeatTogether.Api.Controllers
             return Response.Secrets;
         }
 
-        [HttpGet("GetList/simpleserver/all")]
-        public async Task<SimpleServer[]> GetAllSimpleServerList()
+        [HttpGet("GetList/simpleserver/all/{AccessToken}")]
+        public async Task<ActionResult<SimpleServer[]>> GetAllSimpleServerList(string AccessToken)
         {
+            if (AccessToken != FullAccess)
+                return Unauthorized();
             ServerListResponse Response = await _apiInterface.GetServers(new GetSimpleServersRequest());
             return Response.Servers;
         }
@@ -104,6 +114,53 @@ namespace BeatTogether.Api.Controllers
         {
             PublicServerListResponse Response = await _apiInterface.GetPublicServers(new GetPublicSimpleServersRequest());
             return Response.Servers;
+        }
+
+        [HttpGet("GetTemplate")]
+        public RegularServerTemplate GetServerTemplate()
+        {
+            RegularServerTemplate Response = new(
+                "ManagerId",
+                new GameplayServerConfiguration(
+                    5,
+                    DiscoveryPolicy.Public,
+                    InvitePolicy.AnyoneCanInvite,
+                    GameplayServerMode.Managed,
+                    SongSelectionMode.ManagerPicks,
+                    GameplayServerControlSettings.All),
+                false,
+                10000,
+                "ServerName",
+                MasterServer.Interface.ApiInterface.Enums.BeatmapDifficultyMask.All,
+                MasterServer.Interface.ApiInterface.Enums.GameplayModifiersMask.None,
+                new SongPackMask(0,0));
+            return Response;
+        }
+
+        [HttpPost("CreateServer")]
+        public async Task<ActionResult<SimpleServer>> CreateRegularServer(RegularServerTemplate RegularServerTemplate)
+        {
+            //if(!(AccessToken == CreateAndDestryPermanantServers || AccessToken == FullAccess))
+            //    return Unauthorized();
+            //Console.WriteLine(createServerRequest.ToString());
+            CreatedServerResponse response = await _apiInterface.CreateServer(new CreateServerRequest(
+                RegularServerTemplate.ManagerId,
+                RegularServerTemplate.GameplayServerConfiguration,
+                RegularServerTemplate.PermanantManager,
+                RegularServerTemplate.Timeout,
+                RegularServerTemplate.ServerName,
+                RegularServerTemplate.GameplayServerConfiguration.DiscoveryPolicy == DiscoveryPolicy.Public,
+                RegularServerTemplate.BeatmapDifficultyMask,
+                RegularServerTemplate.GameplayModifiersMask,
+                RegularServerTemplate.SongPackMask,
+                "",
+                ""));
+            if (!response.Success)
+                return BadRequest();
+            ServerFromSecretResponse serverFromSecretResponse = await _apiInterface.GetServerFromSecret(new GetServerFromSecretRequest(response.Secret));
+            if (!serverFromSecretResponse.Success)
+                return NotFound();
+            return serverFromSecretResponse.Server;
         }
     }
 }
