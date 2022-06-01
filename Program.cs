@@ -7,7 +7,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using BeatTogether.DedicatedServer.Interface;
 using Autobus;
-using BeatTogether.MasterServer.Interface.ApiInterface.Abstractions;
+using BeatTogether.Api.Controllers;
+using BeatTogether.MasterServer.Interface.ApiInterface;
 
 namespace BeatTogether.Status.Api
 {
@@ -24,6 +25,7 @@ namespace BeatTogether.Status.Api
                     webHostBuilder
                         .ConfigureServices((hostBuilderContext, services) =>
                             services
+                                
                                 .AddServiceClient<IMatchmakingService>()
                                 .AddServiceClient<IApiInterface>()
                                 .AddOptions()

@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using BeatTogether.Api.Configuration;
-//using BeatTogether.Api.Enums;
 using BeatTogether.Api.Models;
 using BeatTogether.DedicatedServer.Interface;
-using BeatTogether.DedicatedServer.Interface.Enums;
-using BeatTogether.DedicatedServer.Interface.Models;
 using BeatTogether.DedicatedServer.Interface.Requests;
 using BeatTogether.DedicatedServer.Interface.Responses;
-using BeatTogether.MasterServer.Interface.ApiInterface.Abstractions;
+using BeatTogether.MasterServer.Interface.ApiInterface.Enums;
 using BeatTogether.MasterServer.Interface.ApiInterface.Models;
 using BeatTogether.MasterServer.Interface.ApiInterface.Responses;
 using BeatTogether.MasterServer.Interface.ApiInterface.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Autobus;
+using BeatTogether.MasterServer.Interface.ApiInterface;
 
 namespace BeatTogether.Api.Controllers
 {
@@ -26,6 +24,8 @@ namespace BeatTogether.Api.Controllers
         private readonly MasterserverConfiguration _configuration;
         private readonly IMatchmakingService _matchmakingService;
         private readonly IApiInterface _apiInterface;
+        private readonly IAutobus _autobus;
+        //private readonly IHostedClient
 
 
         private const string FullAccess = "FULLACCESS";
@@ -33,11 +33,12 @@ namespace BeatTogether.Api.Controllers
         //private const string CreateBasicServers = "BASICACCESS";
 
 
-        public MasterserverController(IOptionsSnapshot<MasterserverConfiguration> configuration, IMatchmakingService matchmakingService, IApiInterface apiInstance)
+        public MasterserverController(IOptionsSnapshot<MasterserverConfiguration> configuration, IMatchmakingService matchmakingService, IApiInterface apiInstance, IAutobus autobus)
         {
             _configuration = configuration.Value;
             _matchmakingService = matchmakingService;
             _apiInterface = apiInstance;
+            _autobus = autobus;
         }
 
         [HttpGet(Name = "GetMasterserverController")]
@@ -131,8 +132,8 @@ namespace BeatTogether.Api.Controllers
                 false,
                 10000,
                 "ServerName",
-                MasterServer.Interface.ApiInterface.Enums.BeatmapDifficultyMask.All,
-                MasterServer.Interface.ApiInterface.Enums.GameplayModifiersMask.None,
+                BeatmapDifficultyMask.All,
+                GameplayModifiersMask.None,
                 new SongPackMask(0,0));
             return Response;
         }
@@ -142,24 +143,23 @@ namespace BeatTogether.Api.Controllers
         {
             //if(!(AccessToken == CreateAndDestryPermanantServers || AccessToken == FullAccess))
             //    return Unauthorized();
-            //Console.WriteLine(createServerRequest.ToString());
-            CreatedServerResponse response = await _apiInterface.CreateServer(new CreateServerRequest(
+
+            CreateServerRequest request = new(
                 RegularServerTemplate.ManagerId,
                 RegularServerTemplate.GameplayServerConfiguration,
                 RegularServerTemplate.PermanantManager,
                 RegularServerTemplate.Timeout,
                 RegularServerTemplate.ServerName,
-                RegularServerTemplate.GameplayServerConfiguration.DiscoveryPolicy == DiscoveryPolicy.Public,
                 RegularServerTemplate.BeatmapDifficultyMask,
                 RegularServerTemplate.GameplayModifiersMask,
-                RegularServerTemplate.SongPackMask,
-                "",
-                ""));
+                RegularServerTemplate.SongPackMask);
+            //Console.WriteLine(request.ToString());
+            CreatedServerResponse response = await _apiInterface.CreateServer(request);
             if (!response.Success)
                 return BadRequest();
             ServerFromSecretResponse serverFromSecretResponse = await _apiInterface.GetServerFromSecret(new GetServerFromSecretRequest(response.Secret));
             if (!serverFromSecretResponse.Success)
-                return NotFound();
+            return NotFound();
             return serverFromSecretResponse.Server;
         }
     }
