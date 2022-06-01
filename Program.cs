@@ -15,6 +15,7 @@ namespace BeatTogether.Status.Api
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .UseAutobus()
                 .ConfigureAppConfiguration(true)
                 .ConfigureWebHostDefaults(webHostBuilder =>
                     webHostBuilder
