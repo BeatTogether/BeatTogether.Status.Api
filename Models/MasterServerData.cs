@@ -2,6 +2,7 @@
 namespace BeatTogether.Api.Models
 {
     public record MasterServerData(
-        int CurrentInstanceCount,
-        int CurrentPublicInstanceCount);
+        string Endpoint,
+        int CurrentPublicInstanceCount,
+        int CurrentInstancesCount);
 }

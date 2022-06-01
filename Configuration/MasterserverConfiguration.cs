@@ -4,7 +4,6 @@ namespace BeatTogether.Api.Configuration
 {
     public class MasterserverConfiguration
     {
-        public int CurrentInstanceCount { get; set; }
-        public int CurrentPublicInstanceCount { get; set; }
+        public string Endpoint { get; set; } = "232.245.4.22:38493";
     }
 }
