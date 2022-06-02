@@ -18,3 +18,6 @@ masterserver/CreateAdvancedServer/{AccessToken}/ - Creates a server - CAN BE PER
 masterserver/RemoveServer/code/{AccessToken}/ - Will close a server
 masterserver/RemoveServer/secret/{AccessToken}/ - Will close a server
 masterserver/Getserver/{secret}/SetBeatmap/{AccessToken}/ - Will set the beatmap, modifiers and countdown on a server(This is required to be used on a tournament server as the players cannot choose)
+
+status/ - Returns status
+status/status/mp_override.json - Returns Mp overrides
