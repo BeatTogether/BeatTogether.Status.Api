@@ -6,9 +6,9 @@ namespace BeatTogether.Api.Models
     public record AdvancedServerTemplate(
         string ManagerId,
         GameplayServerConfiguration GameplayServerConfiguration,
-        bool PermanantManager,
+        bool PermanentManager,
         float Timeout,
-        bool PermanantServer,
+        bool PermanentServer,
         string ServerName,
         BeatmapDifficultyMask BeatmapDifficultyMask,
         GameplayModifiersMask GameplayModifiersMask,
