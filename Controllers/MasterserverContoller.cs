@@ -80,7 +80,7 @@ namespace BeatTogether.Api.Controllers
         public async Task<ActionResult<AdvancedServer>> GetAdvancedServerFromCodeAsync(string secret)
         {
             AdvancedInstanceResponce Response = await _matchmakingService.GetAdvancedInstance(new GetAdvancedInstanceRequest(secret));
-            if(!Response.success)
+            if (!Response.success)
                 return NotFound();
             return AdvancedServer.Convert(Response._AdvancedInstance!, secret);
         }
@@ -88,7 +88,7 @@ namespace BeatTogether.Api.Controllers
         [HttpGet("GetList/Secret/all/{AccessToken}")]
         public async Task<ActionResult<string[]>> GetAllSecretList(string AccessToken)
         {
-            if(AccessToken != FullAccess)
+            if (AccessToken != FullAccess)
                 return Unauthorized();
             ServerSecretListResponse Response = await _apiInterface.GetServerSecretsList(new GetServerSecretsListRequest());
             return Response.Secrets;
@@ -117,7 +117,7 @@ namespace BeatTogether.Api.Controllers
             return Response.Servers;
         }
 
-        [HttpGet("GetTemplate")]
+        [HttpGet("Test/GetTemplate")]
         public RegularServerTemplate GetServerTemplate()
         {
             RegularServerTemplate Response = new(
@@ -134,21 +134,74 @@ namespace BeatTogether.Api.Controllers
                 "ServerName",
                 BeatmapDifficultyMask.All,
                 GameplayModifiersMask.None,
-                new SongPackMask(0,0));
+                new SongPackMask(0, 0));
             return Response;
+        }
+
+        [HttpGet("GetPublicServerCount")]
+        public async Task<int> GetPublicServerCount()
+        {
+            MasterServer.Interface.ApiInterface.Responses.PublicServerCountResponse response = await _apiInterface.GetPublicServerCount(new GetPublicServerCountRequest());
+            return response.Servers;
+        }
+
+        [HttpGet("GetServerCount")]
+        public async Task<int> GetServerCount()
+        {
+            MasterServer.Interface.ApiInterface.Responses.ServerCountResponse response = await _apiInterface.GetServerCount(new GetServerCountRequest());
+            return response.Severs;
+        }
+
+        [HttpGet("Getserver/advanced/secret/{secret}/players/simple")]
+        public async Task<ActionResult<DedicatedServer.Interface.Models.SimplePlayer[]>> GetSimplePlayersList(string secret)
+        {
+            SimplePlayersListResponce response = await _matchmakingService.GetSimplePlayerList(new GetPlayersSimpleRequest(secret))!;
+            if(!response.success)
+                return NotFound();
+            return response.SimplePlayers!;
+        }
+
+        [HttpGet("Getserver/advanced/secret/{secret}/players/advanced/{AccessToken}/")]
+        public async Task<ActionResult<DedicatedServer.Interface.Models.AdvancedPlayer[]>> GetAdvancedPlayersList(string secret, string AccessToken)
+        {
+            if (!(AccessToken == FullAccess))
+                return Unauthorized();
+            AdvancedPlayersListResponce response = await _matchmakingService.GetAdvancedPlayerList(new GetPlayersAdvancedRequest(secret))!;
+            if (!response.success)
+                return NotFound();
+            return response.AdvancedPlayers!;
+        }
+
+        [HttpGet("Getserver/advanced/secret/{secret}/players/advanced/{PlayerId}/{AccessToken}/")]
+        public async Task<ActionResult<DedicatedServer.Interface.Models.AdvancedPlayer>> GetAdvancedPlayerList(string secret,string PlayerId, string AccessToken)
+        {
+            if (!(AccessToken == FullAccess))
+                return Unauthorized();
+            AdvancedPlayerResponce response = await _matchmakingService.GetAdvancedPlayer(new GetPlayerAdvancedRequest(secret, PlayerId))!;
+            if (!response.success)
+                return NotFound();
+            return response.AdvancedPlayer!;
+        }
+
+        [HttpDelete("Getserver/advanced/secret/{secret}/players/kick/{PlayerId}/{AccessToken}/")]
+        public async Task<IActionResult> RemovePlayer(string secret, string PlayerId, string AccessToken)
+        {
+            if (!(AccessToken == FullAccess))
+                return Unauthorized();
+            KickPlayerResponse response = await _matchmakingService.KickPlayer(new KickPlayerRequest(secret, PlayerId))!;
+            if (!response.Success)
+                return NotFound();
+            return NoContent();
         }
 
         [HttpPost("CreateServer")]
         public async Task<ActionResult<SimpleServer>> CreateRegularServer(RegularServerTemplate RegularServerTemplate)
         {
-            //if(!(AccessToken == CreateAndDestryPermanantServers || AccessToken == FullAccess))
-            //    return Unauthorized();
-
             CreateServerRequest request = new(
                 RegularServerTemplate.ManagerId,
                 RegularServerTemplate.GameplayServerConfiguration,
                 RegularServerTemplate.PermanantManager,
-                RegularServerTemplate.Timeout,
+                Math.Min(Math.Max(RegularServerTemplate.Timeout, 0), 900),
                 RegularServerTemplate.ServerName,
                 RegularServerTemplate.BeatmapDifficultyMask,
                 RegularServerTemplate.GameplayModifiersMask,
@@ -159,8 +212,73 @@ namespace BeatTogether.Api.Controllers
                 return BadRequest();
             ServerFromSecretResponse serverFromSecretResponse = await _apiInterface.GetServerFromSecret(new GetServerFromSecretRequest(response.Secret));
             if (!serverFromSecretResponse.Success)
-            return NotFound();
+                return NotFound();
             return serverFromSecretResponse.Server;
         }
+
+        [HttpPost("CreateAdvancedServer/{AccessToken}/")]
+        public async Task<ActionResult<SimpleServer>> CreateAdvancedServer(string AccessToken, AdvancedServerTemplate AdvancedServerTemplate)
+        {
+
+            if (!(AccessToken == CreateAndDestryPermanantServers || AccessToken == FullAccess))
+                return Unauthorized();
+            float Timeout = Math.Max(AdvancedServerTemplate.Timeout, 0);
+            if (AdvancedServerTemplate.PermanantServer)
+                Timeout = -1;
+            CreateServerRequest request = new(
+                AdvancedServerTemplate.ManagerId,
+                AdvancedServerTemplate.GameplayServerConfiguration,
+                AdvancedServerTemplate.PermanantManager,
+                Timeout,
+                AdvancedServerTemplate.ServerName,
+                AdvancedServerTemplate.BeatmapDifficultyMask,
+                AdvancedServerTemplate.GameplayModifiersMask,
+                AdvancedServerTemplate.SongPackMask,
+                AdvancedServerTemplate.Code,
+                AdvancedServerTemplate.Secret);
+
+
+            CreatedServerResponse response = await _apiInterface.CreateServer(request);
+            if (!response.Success)
+                return BadRequest();
+            ServerFromSecretResponse serverFromSecretResponse = await _apiInterface.GetServerFromSecret(new GetServerFromSecretRequest(response.Secret));
+            if (!serverFromSecretResponse.Success)
+                return NotFound();
+            return serverFromSecretResponse.Server;
+        }
+    
+        [HttpDelete("RemoveServer/code/{AccessToken}/")]
+        public async Task<ActionResult> RemoveServerWithCode(string AccessToken, string code)
+        {
+            if (!(AccessToken == CreateAndDestryPermanantServers || AccessToken == FullAccess))
+                return Unauthorized();
+            RemoveCodeServerResponse response = await _apiInterface.RemoveServer(new RemoveCodeServerCodeRequest(code));
+            if (!response.Success)
+                return NotFound();
+            return NoContent();
+        }
+
+        [HttpDelete("RemoveServer/secret/{AccessToken}/")]
+        public async Task<ActionResult> RemoveServerWithSecret(string AccessToken, string secret)
+        {
+            if (!(AccessToken == CreateAndDestryPermanantServers || AccessToken == FullAccess))
+                return Unauthorized();
+            RemoveSecretServerResponse response = await _apiInterface.RemoveServer(new RemoveSecretServerRequest(secret));
+            if (!response.Success)
+                return NotFound();
+            return NoContent();
+        }
+
+        [HttpPost("Getserver/{secret}/SetBeatmap/{AccessToken}/")]
+        public async Task<ActionResult> SetServerBeatmap(string AccessToken, SetInstanceBeatmapRequest setInstanceBeatmapRequest)
+        {
+            if (!(AccessToken == CreateAndDestryPermanantServers || AccessToken == FullAccess))
+                return Unauthorized();
+            SetInstanceBeatmapResponse response = await _matchmakingService.SetInstanceBeatmap(setInstanceBeatmapRequest);
+            if (!response.Success)
+                return NotFound();
+            return Accepted();
+        }
+
     }
 }

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using BeatTogether.DedicatedServer.Interface;
 using Autobus;
-using BeatTogether.Api.Controllers;
 using BeatTogether.MasterServer.Interface.ApiInterface;
 
 namespace BeatTogether.Status.Api
