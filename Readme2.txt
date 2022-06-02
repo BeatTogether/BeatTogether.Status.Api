@@ -21,3 +21,5 @@ masterserver/Getserver/{secret}/SetBeatmap/{AccessToken}/ - Will set the beatmap
 
 status/ - Returns status
 status/status/mp_override.json - Returns Mp overrides
+
+MasterserverConfiguration contains AccessTokens for FullAccess and CreateAndDestryPermanentServers access - THEY MUST BE CHANGED TO SOMETHING ELSE ON RELEASE

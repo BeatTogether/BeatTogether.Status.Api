@@ -27,12 +27,6 @@ namespace BeatTogether.Api.Controllers
         private readonly IAutobus _autobus;
         //private readonly IHostedClient
 
-
-        private const string FullAccess = "FULLACCESS";
-        private const string CreateAndDestryPermanentServers = "MIDACCESS";
-        //private const string CreateBasicServers = "BASICACCESS";
-
-
         public MasterserverController(IOptionsSnapshot<MasterserverConfiguration> configuration, IMatchmakingService matchmakingService, IApiInterface apiInstance, IAutobus autobus)
         {
             _configuration = configuration.Value;
@@ -88,7 +82,7 @@ namespace BeatTogether.Api.Controllers
         [HttpGet("GetList/Secret/all/{AccessToken}")]
         public async Task<ActionResult<string[]>> GetAllSecretList(string AccessToken)
         {
-            if (AccessToken != FullAccess)
+            if (AccessToken != _configuration.FullAccess)
                 return Unauthorized();
             ServerSecretListResponse Response = await _apiInterface.GetServerSecretsList(new GetServerSecretsListRequest());
             return Response.Secrets;
@@ -104,7 +98,7 @@ namespace BeatTogether.Api.Controllers
         [HttpGet("GetList/simpleserver/all/{AccessToken}")]
         public async Task<ActionResult<SimpleServer[]>> GetAllSimpleServerList(string AccessToken)
         {
-            if (AccessToken != FullAccess)
+            if (AccessToken != _configuration.FullAccess)
                 return Unauthorized();
             ServerListResponse Response = await _apiInterface.GetServers(new GetSimpleServersRequest());
             return Response.Servers;
@@ -164,7 +158,7 @@ namespace BeatTogether.Api.Controllers
         [HttpGet("Getserver/advanced/secret/{secret}/players/advanced/{AccessToken}/")]
         public async Task<ActionResult<DedicatedServer.Interface.Models.AdvancedPlayer[]>> GetAdvancedPlayersList(string secret, string AccessToken)
         {
-            if (!(AccessToken == FullAccess))
+            if (!(AccessToken == _configuration.FullAccess))
                 return Unauthorized();
             AdvancedPlayersListResponce response = await _matchmakingService.GetAdvancedPlayerList(new GetPlayersAdvancedRequest(secret))!;
             if (!response.success)
@@ -175,7 +169,7 @@ namespace BeatTogether.Api.Controllers
         [HttpGet("Getserver/advanced/secret/{secret}/players/advanced/{PlayerId}/{AccessToken}/")]
         public async Task<ActionResult<DedicatedServer.Interface.Models.AdvancedPlayer>> GetAdvancedPlayerList(string secret,string PlayerId, string AccessToken)
         {
-            if (!(AccessToken == FullAccess))
+            if (!(AccessToken == _configuration.FullAccess))
                 return Unauthorized();
             AdvancedPlayerResponce response = await _matchmakingService.GetAdvancedPlayer(new GetPlayerAdvancedRequest(secret, PlayerId))!;
             if (!response.success)
@@ -186,7 +180,7 @@ namespace BeatTogether.Api.Controllers
         [HttpDelete("Getserver/advanced/secret/{secret}/players/kick/{PlayerId}/{AccessToken}/")]
         public async Task<IActionResult> RemovePlayer(string secret, string PlayerId, string AccessToken)
         {
-            if (!(AccessToken == FullAccess))
+            if (!(AccessToken == _configuration.FullAccess))
                 return Unauthorized();
             KickPlayerResponse response = await _matchmakingService.KickPlayer(new KickPlayerRequest(secret, PlayerId))!;
             if (!response.Success)
@@ -220,7 +214,7 @@ namespace BeatTogether.Api.Controllers
         public async Task<ActionResult<SimpleServer>> CreateAdvancedServer(string AccessToken, AdvancedServerTemplate AdvancedServerTemplate)
         {
 
-            if (!(AccessToken == CreateAndDestryPermanentServers || AccessToken == FullAccess))
+            if (!(AccessToken == _configuration.CreateAndDestryPermanentServers || AccessToken == _configuration.FullAccess))
                 return Unauthorized();
             float Timeout = Math.Max(AdvancedServerTemplate.Timeout, 0);
             if (AdvancedServerTemplate.PermanentServer)
@@ -250,7 +244,7 @@ namespace BeatTogether.Api.Controllers
         [HttpDelete("RemoveServer/code/{AccessToken}/")]
         public async Task<ActionResult> RemoveServerWithCode(string AccessToken, string code)
         {
-            if (!(AccessToken == CreateAndDestryPermanentServers || AccessToken == FullAccess))
+            if (!(AccessToken == _configuration.CreateAndDestryPermanentServers || AccessToken == _configuration.FullAccess))
                 return Unauthorized();
             RemoveCodeServerResponse response = await _apiInterface.RemoveServer(new RemoveCodeServerCodeRequest(code));
             if (!response.Success)
@@ -261,7 +255,7 @@ namespace BeatTogether.Api.Controllers
         [HttpDelete("RemoveServer/secret/{AccessToken}/")]
         public async Task<ActionResult> RemoveServerWithSecret(string AccessToken, string secret)
         {
-            if (!(AccessToken == CreateAndDestryPermanentServers || AccessToken == FullAccess))
+            if (!(AccessToken == _configuration.CreateAndDestryPermanentServers || AccessToken == _configuration.FullAccess))
                 return Unauthorized();
             RemoveSecretServerResponse response = await _apiInterface.RemoveServer(new RemoveSecretServerRequest(secret));
             if (!response.Success)
@@ -272,7 +266,7 @@ namespace BeatTogether.Api.Controllers
         [HttpPost("Getserver/{secret}/SetBeatmap/{AccessToken}/")]
         public async Task<ActionResult> SetServerBeatmap(string AccessToken, SetInstanceBeatmapRequest setInstanceBeatmapRequest)
         {
-            if (!(AccessToken == CreateAndDestryPermanentServers || AccessToken == FullAccess))
+            if (!(AccessToken == _configuration.CreateAndDestryPermanentServers || AccessToken == _configuration.FullAccess))
                 return Unauthorized();
             SetInstanceBeatmapResponse response = await _matchmakingService.SetInstanceBeatmap(setInstanceBeatmapRequest);
             if (!response.Success)
