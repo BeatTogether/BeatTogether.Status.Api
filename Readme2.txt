@@ -13,8 +13,8 @@ masterserver/Getserver/advanced/secret/{secret}/players/simple/ - Returns a list
 masterserver/Getserver/advanced/secret/{secret}/players/advanced/{AccessToken}/ - Returns a list of advanced player infomation from a server
 masterserver/Getserver/advanced/secret/{secret}/players/advanced/{PlayerId}/{AccessToken}/ - Returns advanced player infomation of a single player from a server
 masterserver/Getserver/advanced/secret/{secret}/players/kick/{PlayerId}/{AccessToken}/ - Kicks the player from the selected server
-masterserver/CreateServer/ - Creates a server - CANNOT BE PERMANANT - TIMEOUT CANNOT BE OVER 15 MIN
-masterserver/CreateAdvancedServer/{AccessToken}/ - Creates a server - CAN BE PERMANANT - TIMEOUT CAN BE ANY VALUE ABOVE 0 - CAN HAVE CUSTOM CODE AND SECRET
+masterserver/CreateServer/ - Creates a server - CANNOT BE PERMANENT - TIMEOUT CANNOT BE OVER 15 MIN
+masterserver/CreateAdvancedServer/{AccessToken}/ - Creates a server - CAN BE PERMANENT - TIMEOUT CAN BE ANY VALUE ABOVE 0 - CAN HAVE CUSTOM CODE AND SECRET
 masterserver/RemoveServer/code/{AccessToken}/ - Will close a server
 masterserver/RemoveServer/secret/{AccessToken}/ - Will close a server
 masterserver/Getserver/{secret}/SetBeatmap/{AccessToken}/ - Will set the beatmap, modifiers and countdown on a server(This is required to be used on a tournament server as the players cannot choose)
