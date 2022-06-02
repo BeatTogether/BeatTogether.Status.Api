@@ -241,7 +241,7 @@ namespace BeatTogether.Api.Controllers
             return serverFromSecretResponse.Server;
         }
     
-        [HttpDelete("RemoveServer/code/{AccessToken}/")]
+        [HttpDelete("RemoveServer/code/{AccessToken}/{code}")]
         public async Task<ActionResult> RemoveServerWithCode(string AccessToken, string code)
         {
             if (!(AccessToken == _configuration.CreateAndDestryPermanentServers || AccessToken == _configuration.FullAccess))
@@ -252,7 +252,7 @@ namespace BeatTogether.Api.Controllers
             return NoContent();
         }
 
-        [HttpDelete("RemoveServer/secret/{AccessToken}/")]
+        [HttpDelete("RemoveServer/secret/{AccessToken}/{secret}")]
         public async Task<ActionResult> RemoveServerWithSecret(string AccessToken, string secret)
         {
             if (!(AccessToken == _configuration.CreateAndDestryPermanentServers || AccessToken == _configuration.FullAccess))
