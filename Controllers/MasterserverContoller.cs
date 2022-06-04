@@ -251,7 +251,7 @@ namespace BeatTogether.Api.Controllers
         }
     
         [HttpDelete("RemoveServer/code/{AccessToken}/{code}")]
-        public async Task<ActionResult> RemoveServerWithCode(string AccessToken, string code)
+        public async Task<IActionResult> RemoveServerWithCode(string AccessToken, string code)
         {
             if (!(AccessToken == _configuration.CreateAndDestryPermanentServers || AccessToken == _configuration.FullAccess))
                 return Unauthorized();
@@ -262,7 +262,7 @@ namespace BeatTogether.Api.Controllers
         }
 
         [HttpDelete("RemoveServer/secret/{AccessToken}/{secret}")]
-        public async Task<ActionResult> RemoveServerWithSecret(string AccessToken, string secret)
+        public async Task<IActionResult> RemoveServerWithSecret(string AccessToken, string secret)
         {
             if (!(AccessToken == _configuration.CreateAndDestryPermanentServers || AccessToken == _configuration.FullAccess))
                 return Unauthorized();
@@ -273,7 +273,7 @@ namespace BeatTogether.Api.Controllers
         }
 
         [HttpPost("Getserver/{secret}/SetBeatmap/{AccessToken}/")]
-        public async Task<ActionResult> SetServerBeatmap(string AccessToken, SetInstanceBeatmapRequest setInstanceBeatmapRequest)
+        public async Task<IActionResult> SetServerBeatmap(string AccessToken, SetInstanceBeatmapRequest setInstanceBeatmapRequest)
         {
             if (!(AccessToken == _configuration.CreateAndDestryPermanentServers || AccessToken == _configuration.FullAccess))
                 return Unauthorized();
@@ -283,5 +283,32 @@ namespace BeatTogether.Api.Controllers
             return Accepted();
         }
 
+        [HttpPost("BeatmapRepository/Requirements/set/{AccessToken}/")]
+        public async Task<IActionResult> SetAllowedRequirements(string AccessToken, SetAllowedRequirementsRequest AllowedRequirements)
+        {
+            if (!(AccessToken == _configuration.FullAccess))
+                return Unauthorized();
+            SetAllowedRequirementsResponse response = await _matchmakingService.SetAllowedRequirements(AllowedRequirements);
+            if (!response.Success)
+                return NotFound();
+            return Accepted();
+        }
+        [HttpGet("BeatmapRepository/Requirements/")]
+        public async Task<GetAllowedRequirementsResponse> SetAllowedRequirements()
+        {
+            GetAllowedRequirementsResponse response = await _matchmakingService.GetAllowedRequirements(new GetAllowedRequirementsRequest());
+            return response;
+        }
+
+        [HttpDelete("BeatmapRepository/ClearCachedBeatmaps/{AccessToken}")]
+        public async Task<IActionResult> RemoveCachedBeatmaps(string AccessToken)
+        {
+            if (!(AccessToken == _configuration.FullAccess))
+                return Unauthorized();
+            ClearCachedBeatmapsResponse response = await _matchmakingService.ClearCachedBeatmaps(new ClearCachedBeatmapsRequest());
+            if (!response.Success)
+                return NotFound();
+            return NoContent();
+        }
     }
 }
