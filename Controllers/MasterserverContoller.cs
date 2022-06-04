@@ -43,7 +43,7 @@ namespace BeatTogether.Api.Controllers
             return new MasterServerData(
                 _configuration.Endpoint,
                 PublicCount.Servers,
-                AllCount.Severs
+                AllCount.Servers
             );
         }
         [HttpGet("test")]
@@ -74,7 +74,7 @@ namespace BeatTogether.Api.Controllers
         public async Task<ActionResult<AdvancedServer>> GetAdvancedServerFromCodeAsync(string secret)
         {
             AdvancedInstanceResponce Response = await _matchmakingService.GetAdvancedInstance(new GetAdvancedInstanceRequest(secret));
-            if (!Response.success)
+            if (!Response.Success)
                 return NotFound();
             return AdvancedServer.Convert(Response._AdvancedInstance!, secret);
         }
@@ -105,10 +105,19 @@ namespace BeatTogether.Api.Controllers
         }
 
         [HttpGet("GetList/simpleserver/public")]
-        public async Task<SimpleServer[]> GetPublicSimpleServerList()
+        public async Task<ActionResult<SimpleServer[]>> GetPublicSimpleServerList(string AccessToken)
         {
+            if (AccessToken != _configuration.FullAccess)
+                return Unauthorized();
             PublicServerListResponse Response = await _apiInterface.GetPublicServers(new GetPublicSimpleServersRequest());
             return Response.Servers;
+        }
+
+        [HttpGet("GetList/players/{AccessToken}")]
+        public async Task<MServerPlayer[]> GetPlayerList()
+        {
+            PlayersFromMasterServerResponse Response = await _apiInterface.GetAllPlayers(new PlayersFromMasterServerRequest());
+            return Response.ServerPlayers;
         }
 
         [HttpGet("Test/GetTemplate")]
@@ -143,14 +152,14 @@ namespace BeatTogether.Api.Controllers
         public async Task<int> GetServerCount()
         {
             MasterServer.Interface.ApiInterface.Responses.ServerCountResponse response = await _apiInterface.GetServerCount(new GetServerCountRequest());
-            return response.Severs;
+            return response.Servers;
         }
 
         [HttpGet("Getserver/advanced/secret/{secret}/players/simple")]
         public async Task<ActionResult<DedicatedServer.Interface.Models.SimplePlayer[]>> GetSimplePlayersList(string secret)
         {
             SimplePlayersListResponce response = await _matchmakingService.GetSimplePlayerList(new GetPlayersSimpleRequest(secret))!;
-            if(!response.success)
+            if(!response.Success)
                 return NotFound();
             return response.SimplePlayers!;
         }
@@ -161,7 +170,7 @@ namespace BeatTogether.Api.Controllers
             if (!(AccessToken == _configuration.FullAccess))
                 return Unauthorized();
             AdvancedPlayersListResponce response = await _matchmakingService.GetAdvancedPlayerList(new GetPlayersAdvancedRequest(secret))!;
-            if (!response.success)
+            if (!response.Success)
                 return NotFound();
             return response.AdvancedPlayers!;
         }
@@ -172,7 +181,7 @@ namespace BeatTogether.Api.Controllers
             if (!(AccessToken == _configuration.FullAccess))
                 return Unauthorized();
             AdvancedPlayerResponce response = await _matchmakingService.GetAdvancedPlayer(new GetPlayerAdvancedRequest(secret, PlayerId))!;
-            if (!response.success)
+            if (!response.Success)
                 return NotFound();
             return response.AdvancedPlayer!;
         }
