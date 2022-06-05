@@ -9,7 +9,7 @@ jobs:
       - id: meta
         uses: docker/metadata-action@v3
         with:
-          images: ghcr.io/pythonology/beat-together-status-api
+          images: ghcr.io/beattogether/beat-together-status-api
           tags: |
             type=ref,event=branch
             type=ref,event=pr
