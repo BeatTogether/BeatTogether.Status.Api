@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using BeatTogether.DedicatedServer.Interface;
 using Autobus;
+using BeatTogether.Api.Configuration;
 using BeatTogether.MasterServer.Interface.ApiInterface;
 
 namespace BeatTogether.Status.Api
@@ -30,6 +31,7 @@ namespace BeatTogether.Status.Api
                                 .AddOptions()
                                 .Configure<StatusConfiguration>(hostBuilderContext.Configuration.GetSection("Status"))
                                 .Configure<QuickplayConfiguration>(hostBuilderContext.Configuration.GetSection("Quickplay"))
+                                .Configure<MasterserverConfiguration>(hostBuilderContext.Configuration.GetSection("Masterserver"))
                                 .AddControllers()
                                 
                         )
