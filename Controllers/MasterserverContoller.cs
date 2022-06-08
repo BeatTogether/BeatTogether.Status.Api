@@ -46,6 +46,7 @@ namespace BeatTogether.Api.Controllers
                 AllCount.Servers
             );
         }
+
         [HttpGet("test")]
         public string Gettest()
         {
@@ -293,6 +294,7 @@ namespace BeatTogether.Api.Controllers
                 return NotFound();
             return Accepted();
         }
+
         [HttpGet("BeatmapRepository/Requirements/")]
         public async Task<GetAllowedRequirementsResponse> SetAllowedRequirements()
         {

@@ -11,7 +11,7 @@ namespace BeatTogether.Status.Api.Controllers
     [Route("status")]
     public class StatusController : ControllerBase
     {
-        private readonly StatusConfiguration _configuration;
+        private StatusConfiguration _configuration;
 
         public StatusController(IOptionsSnapshot<StatusConfiguration> configuration)
         {
@@ -34,6 +34,14 @@ namespace BeatTogether.Status.Api.Controllers
                 _configuration.MaintenanceEndTime,
                 new UserMessage(_configuration.LocalizedMessages)
             );
+        }
+        [HttpPut("set/{AccessToken}")]
+        public IActionResult Set(string AccessToken, StatusConfiguration configuration)
+        {
+            if(AccessToken != "JSABAIUSBCAUSCUASGVUIEIU(EUH83hfewufhijkmxnbhguhijkm")
+                return Unauthorized();
+            _configuration = configuration;
+            return Accepted();
         }
     }
 }
