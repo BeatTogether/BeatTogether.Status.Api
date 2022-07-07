@@ -9,6 +9,8 @@ using BeatTogether.DedicatedServer.Interface;
 using Autobus;
 using BeatTogether.Api.Configuration;
 using BeatTogether.MasterServer.Interface.ApiInterface;
+using BeatTogether.Api.Cache.Abstractions;
+using BeatTogether.Api.Cache;
 
 namespace BeatTogether.Status.Api
 {
@@ -29,6 +31,7 @@ namespace BeatTogether.Status.Api
                                 .AddServiceClient<IMatchmakingService>()
                                 .AddServiceClient<IApiInterface>()
                                 .AddOptions()
+                                .AddSingleton<IMasterServerCache, MasterServerCache>()
                                 .Configure<StatusConfiguration>(hostBuilderContext.Configuration.GetSection("Status"))
                                 .Configure<QuickplayConfiguration>(hostBuilderContext.Configuration.GetSection("Quickplay"))
                                 .Configure<MasterserverConfiguration>(hostBuilderContext.Configuration.GetSection("Masterserver"))
