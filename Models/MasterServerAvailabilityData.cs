@@ -1,4 +1,5 @@
 ﻿using BeatTogether.Status.Api.Enums;
+using System.Collections.Generic;
 
 namespace BeatTogether.Status.Api.Models
 {
@@ -7,5 +8,6 @@ namespace BeatTogether.Status.Api.Models
         AvailabilityStatus status,
         long maintenanceStartTime,
         long maintenanceEndTime,
-        UserMessage userMessage);
+        UserMessage userMessage,
+        List<RequiredMod> requiredMods);
 }

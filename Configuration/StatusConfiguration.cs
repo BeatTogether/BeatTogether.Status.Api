@@ -9,5 +9,6 @@ namespace BeatTogether.Status.Api.Configuration
         public long MaintenanceStartTime { get; set; }
         public long MaintenanceEndTime { get; set; }
         public List<LocalizedMessage> LocalizedMessages { get; set; } = new();
+        public List<RequiredMod> RequiredMods { get; set; } = new();
     }
 }

@@ -32,7 +32,8 @@ namespace BeatTogether.Status.Api.Controllers
                 status,
                 _configuration.MaintenanceStartTime,
                 _configuration.MaintenanceEndTime,
-                new UserMessage(_configuration.LocalizedMessages)
+                new UserMessage(_configuration.LocalizedMessages),
+                _configuration.RequiredMods
             );
         }
     }
