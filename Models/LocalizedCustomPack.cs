@@ -4,7 +4,7 @@ namespace BeatTogether.Status.Api.Models
 {
     public class LocalizedCustomPack 
     {
-        public string serializedName { get; set; } = ""; 
+        public string serializedName { get; set; } = string.Empty; 
         public int order { get; set; }
         public List<LocalizedCustomPackName> localizedNames { get; set; } = new();
         public List<string> packIds { get; set; } = new();
