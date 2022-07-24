@@ -34,7 +34,8 @@ namespace BeatTogether.Status.Api.Controllers
                 _configuration.MaintenanceStartTime,
                 _configuration.MaintenanceEndTime,
                 new UserMessage(_configuration.LocalizedMessages),
-                _configuration.RequiredMods
+                _configuration.RequiredMods,
+                _configuration.BlacklistMods
             );
         }
 
@@ -44,6 +45,15 @@ namespace BeatTogether.Status.Api.Controllers
             if(!_configuration.AccessTokens.Contains(AccessToken))
                 return Unauthorized();
             _configuration.RequiredMods = RequiredMods;
+            return Accepted();
+        }
+
+        [HttpPost("{AccessToken}/SetBlacklistMods/")]
+        public IActionResult SetBlacklistMods(string AccessToken, List<RequiredMod> BlacklistMods)
+        {
+            if (!_configuration.AccessTokens.Contains(AccessToken))
+                return Unauthorized();
+            _configuration.BlacklistMods = BlacklistMods;
             return Accepted();
         }
 
