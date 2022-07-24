@@ -14,9 +14,9 @@ namespace BeatTogether.Status.Api.Controllers
     {
         private readonly StatusConfiguration _configuration;
 
-        public StatusController(IOptionsSnapshot<StatusConfiguration> configuration)
+        public StatusController(IOptionsMonitor<StatusConfiguration> configuration)
         {
-            _configuration = configuration.Value;
+            _configuration = configuration.CurrentValue;
         }
 
         [HttpGet]
@@ -58,12 +58,14 @@ namespace BeatTogether.Status.Api.Controllers
         }
 
         [HttpPost("{AccessToken}/SetMaintenance/")]
-        public IActionResult SetMaintenance(string AccessToken, long StartTime, long EndTime)
+        public IActionResult SetMaintenance(string AccessToken, MaintenanceTime maintenanceTime)
         {
             if (!_configuration.AccessTokens.Contains(AccessToken))
                 return Unauthorized();
-            _configuration.MaintenanceStartTime = StartTime;
-            _configuration.MaintenanceEndTime = EndTime;
+            if (maintenanceTime.maintenanceEndTime < maintenanceTime.maintenanceStartTime)
+                return BadRequest();
+            _configuration.MaintenanceStartTime = maintenanceTime.maintenanceStartTime;
+            _configuration.MaintenanceEndTime = maintenanceTime.maintenanceEndTime;
             return Accepted();
         }
     }

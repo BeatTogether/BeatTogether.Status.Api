@@ -10,5 +10,5 @@ namespace BeatTogether.Status.Api.Models
         long maintenanceEndTime,
         UserMessage userMessage,
         List<RequiredMod> requiredMods,
-        List<RequiredMod> BlacklistMods);
+        List<RequiredMod> blacklistMods);
 }
