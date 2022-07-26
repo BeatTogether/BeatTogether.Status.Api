@@ -26,7 +26,12 @@ namespace BeatTogether.Status.Api.DediServer
         {
             _autobus.Subscribe<PlayerConnectedToMatchmakingServerEvent>(LogPlayerHandler);
             _autobus.Subscribe<PlayerJoinEvent>(PlayerJoinedDedi);
-            _autobus.Subscribe<PlayerLeaveEvent>(PlayerLeftDedi);
+            _autobus.Subscribe<PlayerLeaveServerEvent>(PlayerLeftDedi);
+            _autobus.Subscribe<UpdateServerEvent>(AddOrUpdateServer);
+            _autobus.Subscribe<UpdateStatusEvent>(UpdateServerState);
+            _autobus.Subscribe<SelectedBeatmapEvent>(UpdateServerBeatmap);
+            _autobus.Subscribe<MatchmakingServerStoppedEvent>(StopServer);
+
             return Task.CompletedTask;
         }
 
@@ -34,8 +39,11 @@ namespace BeatTogether.Status.Api.DediServer
         {
             _autobus.Unsubscribe<PlayerConnectedToMatchmakingServerEvent>(LogPlayerHandler);
             _autobus.Unsubscribe<PlayerJoinEvent>(PlayerJoinedDedi);
-            _autobus.Unsubscribe<PlayerLeaveEvent>(PlayerLeftDedi);
-
+            _autobus.Unsubscribe<PlayerLeaveServerEvent>(PlayerLeftDedi);
+            _autobus.Unsubscribe<UpdateServerEvent>(AddOrUpdateServer);
+            _autobus.Unsubscribe<UpdateStatusEvent>(UpdateServerState);
+            _autobus.Unsubscribe<SelectedBeatmapEvent>(UpdateServerBeatmap);
+            _autobus.Unsubscribe<MatchmakingServerStoppedEvent>(StopServer);
             return Task.CompletedTask;
         }
 
@@ -54,10 +62,34 @@ namespace BeatTogether.Status.Api.DediServer
             return Task.CompletedTask;
         }
 
-        private Task PlayerLeftDedi(PlayerLeaveEvent PlayerEvent)
+        private Task PlayerLeftDedi(PlayerLeaveServerEvent PlayerEvent)
         {
             if (Players.TryGetValue(PlayerEvent.UserId, out var Player) && Player is Connectedplayer p)
                 Players[p.userId] = p.Trim();
+            return Task.CompletedTask;
+        }
+
+        private Task AddOrUpdateServer(UpdateServerEvent serverEvent)
+        {
+
+            return Task.CompletedTask;
+        }
+
+        private Task UpdateServerState(UpdateStatusEvent serverEvent)
+        {
+
+            return Task.CompletedTask;
+        }
+
+        private Task UpdateServerBeatmap(SelectedBeatmapEvent serverEvent)
+        {
+
+            return Task.CompletedTask;
+        }
+
+        private Task StopServer(MatchmakingServerStoppedEvent serverEvent)
+        {
+
             return Task.CompletedTask;
         }
     }
