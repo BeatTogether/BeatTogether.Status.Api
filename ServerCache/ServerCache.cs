@@ -9,17 +9,20 @@ using System.Collections.Concurrent;
 using BeatTogether.MasterServer.Interface.Events;
 using BeatTogether.Status.Api.Models;
 using System.Net;
+using BeatTogether.MasterServer.Interface.ApiInterface;
 
 namespace BeatTogether.Status.Api.DediServer
 {
     public class ServerCache : IHostedService
     {
         private readonly IAutobus _autobus;
+        private readonly IApiInterface _MasterApiInterface;
         ConcurrentDictionary<string, IPlayer> Players = new();
 
-        public ServerCache(IAutobus autobus)
+        public ServerCache(IAutobus autobus, IApiInterface MApiInterface)
         {
             _autobus = autobus;
+            _MasterApiInterface = MApiInterface;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
@@ -31,7 +34,7 @@ namespace BeatTogether.Status.Api.DediServer
             _autobus.Subscribe<UpdateStatusEvent>(UpdateServerState);
             _autobus.Subscribe<SelectedBeatmapEvent>(UpdateServerBeatmap);
             _autobus.Subscribe<MatchmakingServerStoppedEvent>(StopServer);
-
+            
             return Task.CompletedTask;
         }
 

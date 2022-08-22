@@ -1,4 +1,6 @@
+using Autobus;
 using BeatTogether.Extensions;
+using BeatTogether.MasterServer.Interface.ApiInterface;
 using BeatTogether.Status.Api.Configuration;
 using BeatTogether.Status.Api.DediServer;
 using Microsoft.AspNetCore.Builder;
@@ -17,11 +19,13 @@ namespace BeatTogether.Status.Api
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(true)
+                .UseAutobus()
                 .ConfigureWebHostDefaults(webHostBuilder =>
                     webHostBuilder
                         .ConfigureServices((hostBuilderContext, services) =>
                             services
                                 .AddHostedService<ServerCache>()
+                                .AddServiceClient<IApiInterface>()
                                 .AddOptions()
                                 .Configure<StatusConfiguration>(hostBuilderContext.Configuration.GetSection("Status"))
                                 .Configure<QuickplayConfiguration>(hostBuilderContext.Configuration.GetSection("Quickplay"))
