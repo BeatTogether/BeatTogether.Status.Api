@@ -8,8 +8,6 @@ PC: [here](https://github.com/pythonology/BeatTogether#installation).
 
 Quest: [here](https://github.com/pythonology/BeatTogether.Quest#installation).
 
-https://github.com/BeatTogether/BeatTogether.MasterServer/blob/master/README.md
-
 ## Feeling adventurous? Want to host your own server?
 
 We haven't written a official version of server hosting yet, but here is a guide from a fellow community member!
