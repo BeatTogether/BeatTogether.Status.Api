@@ -9,5 +9,6 @@ namespace BeatTogether.Status.Api.Models
         long maintenanceStartTime,
         long maintenanceEndTime,
         UserMessage userMessage,
-        List<RequiredMod> requiredMods);
+        List<RequiredMod> requiredMods,
+        bool useSsl);
 }
