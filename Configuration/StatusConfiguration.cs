@@ -10,5 +10,9 @@ namespace BeatTogether.Status.Api.Configuration
         public long MaintenanceEndTime { get; set; }
         public List<LocalizedMessage> LocalizedMessages { get; set; } = new();
         public List<RequiredMod> RequiredMods { get; set; } = new();
+        /// <summary>
+        /// Prefer SSL (DTLS) for dedicated server connections? 
+        /// </summary>
+        public bool UseSsl { get; set; } = false;
     }
 }
