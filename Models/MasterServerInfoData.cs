@@ -7,5 +7,5 @@
         int maxPlayers,
         bool supportsPPModifiers,
         bool supportsPPDifficulties,
-        bool serversupportsPPMaps);
+        bool supportsPPMaps);
 }
