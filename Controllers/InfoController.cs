@@ -22,7 +22,11 @@ namespace BeatTogether.Status.Api.Controllers
             return new MasterServerInfoData(
                 _configuration.ServerDisplayName,
                 _configuration.ServerDescription,
-                _configuration.ServerImageUrl);
+                _configuration.ServerImageUrl,
+                _configuration.MaxPlayers,
+                _configuration.ServerSupportsPPModifiers,
+                _configuration.ServerSupportsPPDifficulties,
+                _configuration.ServerSupportsPPMaps);
         }
     }
 }
