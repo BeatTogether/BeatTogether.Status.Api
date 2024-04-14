@@ -39,9 +39,9 @@ namespace BeatTogether.Status.Api.Controllers
                 _configuration.ServerDescription,
                 _configuration.ServerImageUrl,
                 _configuration.MaxPlayers,
-                _configuration.ServerSupportsPPModifiers,
-                _configuration.ServerSupportsPPDifficulties,
-                _configuration.ServerSupportsPPMaps
+                _configuration.ServerSupportsPpModifiers,
+                _configuration.ServerSupportsPpDifficulties,
+                _configuration.ServerSupportsPpMaps
             );
         }
     }

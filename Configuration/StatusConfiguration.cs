@@ -18,8 +18,8 @@ namespace BeatTogether.Status.Api.Configuration
         public string ServerDescription { get; set; } = string.Empty;
         public string ServerImageUrl { get; set; } = string.Empty;
         public int MaxPlayers { get; set; } = 25;
-        public bool ServerSupportsPPModifiers { get; set; } = false;
-        public bool ServerSupportsPPDifficulties { get; set; } = false;
-        public bool ServerSupportsPPMaps { get; set; } = false;
+        public bool ServerSupportsPpModifiers { get; set; } = false;
+        public bool ServerSupportsPpDifficulties { get; set; } = false;
+        public bool ServerSupportsPpMaps { get; set; } = false;
     }
 }
