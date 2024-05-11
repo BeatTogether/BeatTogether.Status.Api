@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 
 namespace BeatTogether.Status.Api
 {
@@ -25,6 +26,13 @@ namespace BeatTogether.Status.Api
                                 .Configure<QuickplayConfiguration>(hostBuilderContext.Configuration.GetSection("Quickplay"))
                                 .Configure<InfoConfiguration>(hostBuilderContext.Configuration.GetSection("Info"))
                                 .AddControllers()
+                                .AddNewtonsoftJson(options =>
+                                {
+                                    options.SerializerSettings.ContractResolver = new DefaultContractResolver
+                                    {
+                                        NamingStrategy = new SnakeCaseNamingStrategy()
+                                    };
+                                })
                         )
                         .Configure(applicationBuilder =>
                             applicationBuilder

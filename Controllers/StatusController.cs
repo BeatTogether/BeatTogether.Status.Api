@@ -19,7 +19,7 @@ namespace BeatTogether.Status.Api.Controllers
         }
 
         [HttpGet]
-        public MasterServerAvailabilityData Get()
+        public MasterServerStatusData Get()
         {
             var status = AvailabilityStatus.Online;
             var timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
@@ -27,14 +27,21 @@ namespace BeatTogether.Status.Api.Controllers
                 status = AvailabilityStatus.MaintenanceUpcoming;
             else if (timestamp < _configuration.MaintenanceEndTime)
                 status = AvailabilityStatus.Offline;
-            return new MasterServerAvailabilityData(
+            return new MasterServerStatusData(
                 _configuration.MinimumAppVersion,
                 status,
                 _configuration.MaintenanceStartTime,
                 _configuration.MaintenanceEndTime,
                 new UserMessage(_configuration.LocalizedMessages),
                 _configuration.RequiredMods,
-                _configuration.UseSsl
+                _configuration.UseSsl,
+                _configuration.ServerDisplayName,
+                _configuration.ServerDescription,
+                _configuration.ServerImageUrl,
+                _configuration.MaxPlayers,
+                _configuration.ServerSupportsPpModifiers,
+                _configuration.ServerSupportsPpDifficulties,
+                _configuration.ServerSupportsPpMaps
             );
         }
     }
