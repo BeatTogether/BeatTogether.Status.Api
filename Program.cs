@@ -24,7 +24,6 @@ namespace BeatTogether.Status.Api
                                 .AddOptions()
                                 .Configure<StatusConfiguration>(hostBuilderContext.Configuration.GetSection("Status"))
                                 .Configure<QuickplayConfiguration>(hostBuilderContext.Configuration.GetSection("Quickplay"))
-                                .Configure<InfoConfiguration>(hostBuilderContext.Configuration.GetSection("Info"))
                                 .AddControllers()
                                 .AddNewtonsoftJson(options =>
                                 {
