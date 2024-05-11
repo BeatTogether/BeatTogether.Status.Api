@@ -41,4 +41,16 @@ namespace BeatTogether.Status.Api
                 )
                 .UseSerilog();
     }
+
+    public static class HostBuilderExtensions
+    {
+        public static IHostBuilder UseStatusServer(this IHostBuilder hostBuilder) =>
+            hostBuilder
+                .ConfigureAppConfiguration()
+                .ConfigureServices((hostBuilderContext, services) =>
+                    services
+                        .Configure<StatusConfiguration>(hostBuilderContext.Configuration.GetSection("Status"))
+                        .Configure<QuickplayConfiguration>(hostBuilderContext.Configuration.GetSection("Quickplay"))
+                );
+    }
 }
