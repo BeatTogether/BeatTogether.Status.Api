@@ -1,9 +1,9 @@
-﻿using BeatTogether.Status.Api.Configuration;
-using BeatTogether.Status.Api.Models;
+﻿using BeatTogether.Status.Api.Controllers.Configuration;
+using BeatTogether.Status.Api.Controllers.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
-namespace BeatTogether.Status.Api.Controllers
+namespace BeatTogether.Status.Api.Controllers.Controllers
 {
     [ApiController]
     [Route("status/mp_override.json")]
