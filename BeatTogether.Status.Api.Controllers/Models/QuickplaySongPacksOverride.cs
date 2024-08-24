@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace BeatTogether.Status.Api.Models
+﻿
+namespace BeatTogether.Status.Api.Controllers.Models
 {
     public record QuickplaySongPacksOverride(
         List<PredefinedPack> predefinedPackIds,

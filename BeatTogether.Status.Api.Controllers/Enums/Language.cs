@@ -1,4 +1,4 @@
-﻿namespace BeatTogether.Status.Api.Enums
+﻿namespace BeatTogether.Status.Api.Controllers.Enums
 {
     public enum Language
     {
