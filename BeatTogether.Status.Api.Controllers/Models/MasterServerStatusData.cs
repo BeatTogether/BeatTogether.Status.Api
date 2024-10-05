@@ -1,9 +1,13 @@
 ﻿using BeatTogether.Status.Api.Controllers.Enums;
+using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace BeatTogether.Status.Api.Controllers.Models
 {
-    public record MasterServerStatusData(
+	[JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+
+	public record MasterServerStatusData(
         string minimumAppVersion,
         AvailabilityStatus status,
         long maintenanceStartTime,

@@ -1,6 +1,10 @@
-﻿namespace BeatTogether.Status.Api.Controllers.Models
+﻿using Newtonsoft.Json.Serialization;
+using Newtonsoft.Json;
+
+namespace BeatTogether.Status.Api.Controllers.Models
 {
-    public record RequiredMod
+	[JsonObject(NamingStrategyType = typeof(SnakeCaseNamingStrategy))]
+	public record RequiredMod
     {
         /// <summary>
         /// BSIPA Mod ID
