@@ -35,7 +35,12 @@ namespace BeatTogether.Status.Api
                         )
                         .Configure(applicationBuilder =>
                             applicationBuilder
-                                .UseRouting()
+	                            .Use((context, next) =>
+	                            {
+		                            context.Response.Headers.Add("X-Robots-Tag", "noindex, nofollow"); // Tell everyone that we don't want to be indexed
+		                            return next(context);
+	                            })
+								.UseRouting()
                                 .UseEndpoints(endPointRouteBuilder => endPointRouteBuilder.MapControllers())
                         )
                 )
